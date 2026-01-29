@@ -341,51 +341,5 @@ jobs:
             esac
           fi
           
-          if [ -n "$note" ]; then
-            MESSAGE+="%0A📌 *Note:* ${note}%0A"
-          fi
-          
-          MESSAGE+="%0A📦 [Download Kernel](${job_url})%0A"
-          MESSAGE+="🔗 [View Workflow](${job_url})"
-          
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-            -d chat_id="${TELEGRAM_CHAT_ID}" \
-            -d parse_mode="Markdown" \
-            -d text="${MESSAGE}" \
-            -d disable_web_page_preview=true
 
-      - name: Send Failure Notification to Telegram
-        if: failure()
-        run: |
-          commit_hash="$(cd kernel && git rev-parse --short HEAD 2>/dev/null || echo 'N/A')"
-          job_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          note="${{ github.event.inputs.custom_note }}"
-          
-          MESSAGE="❌ *Kernel Build Failed!*%0A%0A"
-          MESSAGE+="📱 *Device:* RM6785%0A"
-          MESSAGE+="🏷️ *Build Variant:* "
-          
-          if [ "${{ github.event.inputs.enable_ksu }}" == "true" ]; then
-            MESSAGE+="${{ github.event.inputs.ksu_variant }}"
-            if [ "${{ github.event.inputs.enable_susfs }}" == "true" ]; then
-              MESSAGE+=" + SUSFS"
-            fi
-          else
-            MESSAGE+="Stock"
-          fi
-          MESSAGE+="%0A"
-          
-          MESSAGE+="🌿 *Branch:* ${{ github.event.inputs.kernel_branch }}%0A"
-          MESSAGE+="📝 *Commit:* [\`${commit_hash}\`](https://github.com/elohim-etz/android_kernel_realme_mt6785/commit/${commit_hash})%0A"
-          
-          if [ -n "$note" ]; then
-            MESSAGE+="%0A📌 *Note:* ${note}%0A"
-          fi
-          
-          MESSAGE+="%0A🔗 [View Error Logs](${job_url})"
-          
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-            -d chat_id="${TELEGRAM_CHAT_ID}" \
-            -d parse_mode="Markdown" \
-            -d text="${MESSAGE}" \
-            -d disable_web_page_preview=true
+      
