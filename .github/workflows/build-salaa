@@ -1,4 +1,4 @@
-name: Build RM6785 Kernel
+name: Build salaa Kernel
 
 on:
   workflow_dispatch:
